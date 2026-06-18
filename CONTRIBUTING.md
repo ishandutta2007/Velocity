@@ -1,11 +1,11 @@
-# 🤝 Contributing to Open Anticentravity
+# 🤝 Contributing to Open Velocity
 
-First off, thank you for considering contributing to **Open Anticentravity**! 🎉 It's people like you that make this such a great tool for the community.
+First off, thank you for considering contributing to **Open Velocity**! 🎉 It's people like you that make this such a great tool for the community.
 
 ## 🚀 Where do I go from here?
 
 If you've noticed a 🐛 bug or have a 💡 feature request:
-1.  **Search** the [issue tracker](https://github.com/ishandutta2007/open-anticentravity/issues) to see if it's already been reported.
+1.  **Search** the [issue tracker](https://github.com/ishandutta2007/open-velocity/issues) to see if it's already been reported.
 2.  If not, feel free to **create a new issue**!
 
 ## 🍴 Fork & Create a Branch

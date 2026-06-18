@@ -144,8 +144,8 @@ graph TB
 
 ```bash
 # Clone the repository
-git clone https://github.com/mkrishna793/open-anticentravity.git
-cd open-anticentravity
+git clone https://github.com/mkrishna793/open-velocity.git
+cd open-velocity
 
 # Install dependencies inside the newcore engine
 cd newcore

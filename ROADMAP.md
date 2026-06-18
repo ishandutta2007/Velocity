@@ -1,4 +1,4 @@
-# 🗺️ Roadmap: Building Open Anticentravity
+# 🗺️ Roadmap: Building Open Velocity
 
 ## 🌟 High-Level Summary
 Create an **agent-first** development environment where AI agents can plan, write, run, debug, test, and verify software using an IDE, terminal, browser, and artifact system. The core pillars include agent orchestration, verifiable artifacts, secure tool access, and a trustworthy development workflow.
@@ -8,7 +8,7 @@ Create an **agent-first** development environment where AI agents can plan, writ
 ## 🔍 Phase 0: Discovery & Constraints
 **Status:** 🏗️ In Progress
 
-- 🧩 Understand Anticentravity’s core UX patterns: agent manager, editor integration, artifacts, multi-agent coordination.
+- 🧩 Understand Velocity’s core UX patterns: agent manager, editor integration, artifacts, multi-agent coordination.
 - 🎯 Define MVP functional boundaries and target audience (indie developers, teams, enterprise).
 - 🛡️ Identify compliance, safety, and data privacy constraints.
 - 📊 Estimate budget, infrastructure, hosting model, and team composition.

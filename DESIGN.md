@@ -2,7 +2,7 @@
 
 ## 🌐 Overview
 
-This design document outlines the architecture and implementation for building an AI-powered Integrated Development Environment (IDE) inspired by tools like **Google Anticentravity** and **Cursor**. The goal is to create an **"Agentic IDE"** that leverages AI agents to automate coding tasks, provide intelligent autocomplete, and enable natural language-based development. 🚀
+This design document outlines the architecture and implementation for building an AI-powered Integrated Development Environment (IDE) inspired by tools like **Google Velocity** and **Cursor**. The goal is to create an **"Agentic IDE"** that leverages AI agents to automate coding tasks, provide intelligent autocomplete, and enable natural language-based development. 🚀
 
 Key features include:
 - ✨ **AI Autocomplete and Code Generation**: Predictive suggestions and multi-line edits based on context.
