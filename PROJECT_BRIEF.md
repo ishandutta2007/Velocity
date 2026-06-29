@@ -1,7 +1,4 @@
 # OpenCentravity v0.2.0 — Full Project Brief for Next AI
-
-> **Read this file first.** It tells you everything you need to know to continue this project. The previous AI (me) ran out of time and made the test suite worse instead of better. Your job is to take the working production code and turn it into a fully-tested, fully-documented, production-grade system.
-
 ---
 
 ## 1. Project Overview
