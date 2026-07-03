@@ -15,6 +15,7 @@ import * as agentsTable from '../db/tables/agents.js';
 import * as messagesTable from '../db/tables/messages.js';
 import * as costTable from '../db/tables/cost-events.js';
 import * as lwmTable from '../db/tables/lwm-snapshots.js';
+import * as swarmsTable from '../db/tables/swarms.js';
 import { withTransaction } from '../db/index.js';
 import { LiquidMemory } from '../memory/liquid.js';
 import { persistSnapshot as persistLwmSnapshot, clearSnapshotTracking } from '../memory/snapshot.js';
@@ -268,7 +269,62 @@ export class Agent extends EventEmitter {
     return this.getStatus();
   }
 
+  private async checkCostCap(): Promise<boolean> {
+    const config = getConfig();
+    const maxCostUsd = config.maxCostUsd;
+    let actualMaxCostUsd = maxCostUsd;
+
+    if (this.config.swarmId) {
+      const swarm = await swarmsTable.findById(this.config.swarmId);
+      if (swarm && swarm.maxCostUsd > 0) {
+         actualMaxCostUsd = swarm.maxCostUsd;
+      }
+    }
+
+    if (actualMaxCostUsd <= 0) return true; // No cap
+
+    let totalCost = 0;
+    if (this.config.swarmId) {
+      totalCost = await swarmsTable.totalCost(this.config.swarmId);
+    } else {
+      const summary = await costTable.summarize({ agentId: this.id });
+      totalCost = summary.totalCostUsd;
+    }
+
+    if (totalCost > actualMaxCostUsd) {
+      if (config.costOverflowAction === 'kill') {
+         const errorMsg = `Cost cap exceeded: $${totalCost.toFixed(4)} > $${actualMaxCostUsd.toFixed(2)}`;
+         this.emitEvent({ type: 'agent:error', agentId: this.id, error: errorMsg });
+         this.messages.push({ role: 'assistant', content: errorMsg });
+         await this.setState('failed');
+         throw new Error(errorMsg);
+      } else if (config.costOverflowAction === 'pause') {
+         const errorMsg = `Cost cap exceeded: $${totalCost.toFixed(4)} > $${actualMaxCostUsd.toFixed(2)}`;
+         this.emitEvent({ type: 'agent:error', agentId: this.id, error: errorMsg });
+         this.messages.push({ role: 'assistant', content: errorMsg });
+         await this.setState('paused_cost_limit');
+         // We await manual intervention via the REST API to resume execution
+         const approved = await new Promise<boolean>((resolve) => { this.resumeResolver = resolve; });
+         if (!approved) {
+             await this.setState('failed');
+             throw new Error(`Cost cap exceeded: agent terminated by user.`);
+         }
+         await this.setState('executing');
+      } else if (config.costOverflowAction === 'downgrade') {
+         // Only downgrade if not already downgraded, to prevent infinite loops of log pollution
+         if (this.config.model !== config.defaultModel) {
+             this.config.model = config.defaultModel; // E.g. 'mock' or 'gpt-3.5-turbo' depending on config
+             this.audit.log({ agentId: this.id, action: 'agent:downgrade', target: this.config.task, result: 'success', details: `Downgraded to ${this.config.model} due to cost limit`, durationMs: 0 });
+         }
+      }
+    }
+
+    return true;
+  }
+
   private async createPlan(): Promise<ExecutionPlan> {
+    await this.checkCostCap();
+
     this.messages.push({ role: 'user', content: `Create a detailed execution plan for this task:\n\n${this.config.task}\n\nRespond with a JSON execution plan.` });
 
     const response = await this.gateway.complete(
@@ -448,6 +504,8 @@ export class Agent extends EventEmitter {
   }
 
   private async executeLLMStep(step: PlanStep, toolContext: ToolContext): Promise<ToolResult> {
+    await this.checkCostCap();
+
     let whiteboardInjection = "";
     if (this.whiteboard) {
       const messages = this.whiteboard.getMessages(this.id);
@@ -498,6 +556,8 @@ export class Agent extends EventEmitter {
   }
 
   private async retryStep(step: PlanStep, failedResult: ToolResult, toolContext: ToolContext): Promise<ToolResult | null> {
+    await this.checkCostCap();
+
     this.messages.push({
       role: 'user',
       content: `Step ${step.id} failed with error: ${failedResult.error}\n\nPlease fix the issue and try again.`,

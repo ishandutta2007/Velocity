@@ -82,8 +82,8 @@ export async function startServer(orchestrator?: AgentOrchestrator) {
   app.post<{ Params: { id: string } }>('/agents/:id/approve', async (req, reply) => {
     const agent = engine.getAgent(req.params.id);
     if (!agent) return reply.code(404).send({ error: 'Agent not found' });
-    if (agent.getStatus().state !== 'waiting_feedback') {
-      return reply.code(400).send({ error: 'Agent is not waiting for feedback' });
+    if (agent.getStatus().state !== 'waiting_feedback' && agent.getStatus().state !== 'paused_cost_limit') {
+      return reply.code(400).send({ error: 'Agent is not waiting for feedback or paused due to cost limits' });
     }
     agent.approveHitL(true);
     return { success: true, message: 'Agent execution resumed.' };
@@ -92,11 +92,43 @@ export async function startServer(orchestrator?: AgentOrchestrator) {
   app.post<{ Params: { id: string } }>('/agents/:id/reject', async (req, reply) => {
     const agent = engine.getAgent(req.params.id);
     if (!agent) return reply.code(404).send({ error: 'Agent not found' });
-    if (agent.getStatus().state !== 'waiting_feedback') {
-      return reply.code(400).send({ error: 'Agent is not waiting for feedback' });
+    if (agent.getStatus().state !== 'waiting_feedback' && agent.getStatus().state !== 'paused_cost_limit') {
+      return reply.code(400).send({ error: 'Agent is not waiting for feedback or paused due to cost limits' });
     }
     agent.approveHitL(false);
     return { success: true, message: 'Agent execution rejected.' };
+  });
+
+  // Cost Approval
+  app.post<{ Params: { id: string }, Body: { additionalBudgetUsd: number } }>('/swarms/:id/budget', async (req, reply) => {
+    const { id } = req.params;
+    const { additionalBudgetUsd } = req.body;
+
+    if (!additionalBudgetUsd || additionalBudgetUsd <= 0) {
+       return reply.code(400).send({ error: 'additionalBudgetUsd must be greater than 0' });
+    }
+
+    const swarm = await swarmsTable.findById(id);
+    if (!swarm) return reply.code(404).send({ error: 'Swarm not found' });
+
+    // Assuming the intent is to increase the maxCostUsd on the swarm
+    const db = await import('./db/index.js').then(m => m.getDb());
+    await db.execute({
+       sql: 'UPDATE swarms SET max_cost_usd = max_cost_usd + ? WHERE id = ?',
+       args: [additionalBudgetUsd, id]
+    });
+
+    // Now find any agents blocked by this cost limit and unblock them
+    const agents = engine.listAgents().filter(a => a.state === 'paused_cost_limit');
+    for (const a of agents) {
+       // Only unblock agents in this swarm
+       const agent = engine.getAgent(a.id);
+       if (agent && agent.config.swarmId === id) {
+           agent.approveHitL(true);
+       }
+    }
+
+    return { success: true, message: `Swarm ${id} budget increased by $${additionalBudgetUsd}. Blocked agents resumed.` };
   });
 
   // ── Liquid Working Memory (LWM) ──

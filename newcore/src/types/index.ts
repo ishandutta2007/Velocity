@@ -12,6 +12,7 @@ export type AgentState =
   | 'executing'
   | 'verifying'
   | 'waiting_feedback'
+  | 'paused_cost_limit'
   | 'completed'
   | 'failed'
   | 'cancelled';
