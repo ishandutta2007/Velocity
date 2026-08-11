@@ -19,6 +19,8 @@ export const ConfigSchema = z.object({
   openaiApiKey: z.string().optional(),
   anthropicApiKey: z.string().optional(),
   geminiApiKey: z.string().optional(),
+  atlasCloudApiKey: z.string().optional(),
+  atlasCloudBaseUrl: z.string().default('https://api.atlascloud.ai/v1'),
   ollamaBaseUrl: z.string().default('http://localhost:11434'),
   defaultModel: z.string().default('mock'),
 
@@ -92,6 +94,8 @@ export function loadConfig(overrides?: Partial<Config>): Config {
     openaiApiKey: envVars.OPENAI_API_KEY || undefined,
     anthropicApiKey: envVars.ANTHROPIC_API_KEY || undefined,
     geminiApiKey: envVars.GEMINI_API_KEY || undefined,
+    atlasCloudApiKey: envVars.ATLASCLOUD_API_KEY || undefined,
+    atlasCloudBaseUrl: envVars.ATLASCLOUD_API_BASE || undefined,
     ollamaBaseUrl: envVars.OLLAMA_BASE_URL || undefined,
     defaultModel: envVars.DEFAULT_MODEL || undefined,
     workspaceRoot: envVars.WORKSPACE_ROOT || undefined,

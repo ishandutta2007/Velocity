@@ -21,6 +21,7 @@ export { MockProvider } from './gateway/providers/mock.js';
 export { GeminiProvider } from './gateway/providers/gemini.js';
 export { OpenAIProvider } from './gateway/providers/openai.js';
 export { AnthropicProvider } from './gateway/providers/anthropic.js';
+export { AtlasCloudProvider } from './gateway/providers/atlas-cloud.js';
 export { OllamaProvider } from './gateway/providers/ollama.js';
 
 // Tools
