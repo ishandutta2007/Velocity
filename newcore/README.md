@@ -110,6 +110,7 @@ graph TB
         GW --> GEMINI["Gemini"]
         GW --> OLLAMA["Ollama"]
         GW --> OPENAI["OpenAI"]
+        GW --> ATLAS["Atlas Cloud"]
         GW --> ANTHROPIC["Anthropic"]
     end
     
@@ -153,6 +154,14 @@ npm install
 
 # Setup environment variables
 cp .env.example .env
+```
+
+To use Atlas Cloud, set its API key and select the built-in model:
+
+```bash
+ATLASCLOUD_API_KEY=your-api-key
+ATLASCLOUD_API_BASE=https://api.atlascloud.ai/v1
+DEFAULT_MODEL=atlas-cloud:qwen/qwen3.8-max
 ```
 
 ### Usage (CLI)

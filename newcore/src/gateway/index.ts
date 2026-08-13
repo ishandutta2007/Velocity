@@ -15,6 +15,7 @@ import { MockProvider } from './providers/mock.js';
 import { GeminiProvider } from './providers/gemini.js';
 import { OpenAIProvider } from './providers/openai.js';
 import { AnthropicProvider } from './providers/anthropic.js';
+import { AtlasCloudProvider } from './providers/atlas-cloud.js';
 import { OllamaProvider } from './providers/ollama.js';
 import { recordCall } from './cost-recorder.js';
 
@@ -64,12 +65,15 @@ export class ModelGateway {
     if (config.anthropicApiKey) {
       this.registerProvider(new AnthropicProvider(config.anthropicApiKey));
     }
+    if (config.atlasCloudApiKey) {
+      this.registerProvider(new AtlasCloudProvider(config.atlasCloudApiKey, config.atlasCloudBaseUrl));
+    }
 
     // Ollama is always registered (may or may not be running)
     this.registerProvider(new OllamaProvider(config.ollamaBaseUrl));
 
     // Build fallback chain: prefer real providers, fall back to mock
-    this.fallbackChain = ['gemini', 'openai', 'anthropic', 'ollama', 'mock'];
+    this.fallbackChain = ['gemini', 'openai', 'atlas-cloud', 'anthropic', 'ollama', 'mock'];
   }
 
   registerProvider(provider: ModelProvider): void {
