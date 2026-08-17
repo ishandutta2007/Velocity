@@ -109,7 +109,7 @@ graph TD
 
 ## ⭐ Star 历史
 
-[![Star 历史图表](https://api.star-history.com/svg?repos=ishandutta2007/open-velocity&type=date&legend=top-left)](https://www.star-history.com/#ishandutta2007/open-velocity&type=date&legend=top-left)
+[![Star 历史图表](https://star-history.dera.page/svg?repos=ishandutta2007/open-velocity&type=date&legend=top-left)](https://star-history.dera.page/#ishandutta2007/open-velocity&type=date&legend=top-left)
 
 ---
 
