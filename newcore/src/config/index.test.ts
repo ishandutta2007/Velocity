@@ -17,3 +17,19 @@ describe('Atlas Cloud configuration', () => {
     });
   });
 });
+
+describe('Cheaper Inference configuration', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('loads the Cheaper Inference API key and endpoint from the environment', () => {
+    vi.stubEnv('CHEAPERINFERENCE_API_KEY', 'cheaper-inference-test-key');
+    vi.stubEnv('CHEAPERINFERENCE_API_BASE', 'https://cheaper-inference.example/v1');
+
+    expect(loadConfig()).toMatchObject({
+      cheaperInferenceApiKey: 'cheaper-inference-test-key',
+      cheaperInferenceBaseUrl: 'https://cheaper-inference.example/v1',
+    });
+  });
+});
