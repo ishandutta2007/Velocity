@@ -111,6 +111,7 @@ graph TB
         GW --> OLLAMA["Ollama"]
         GW --> OPENAI["OpenAI"]
         GW --> ATLAS["Atlas Cloud"]
+        GW --> CHEAPERINFERENCE["Cheaper Inference"]
         GW --> ANTHROPIC["Anthropic"]
     end
     
@@ -162,6 +163,14 @@ To use Atlas Cloud, set its API key and select the built-in model:
 ATLASCLOUD_API_KEY=your-api-key
 ATLASCLOUD_API_BASE=https://api.atlascloud.ai/v1
 DEFAULT_MODEL=atlas-cloud:qwen/qwen3.8-max
+```
+
+To use Cheaper Inference, set its API key and select the built-in model:
+
+```bash
+CHEAPERINFERENCE_API_KEY=your-api-key
+CHEAPERINFERENCE_API_BASE=https://api.cheaperinference.com/v1
+DEFAULT_MODEL=cheaper-inference:gpt-5.4-mini
 ```
 
 ### Usage (CLI)
