@@ -112,6 +112,7 @@ graph TB
         GW --> OPENAI["OpenAI"]
         GW --> ATLAS["Atlas Cloud"]
         GW --> CHEAPERINFERENCE["Cheaper Inference"]
+        GW --> UBERLLM["UberLLM"]
         GW --> ANTHROPIC["Anthropic"]
     end
     
@@ -171,6 +172,14 @@ To use Cheaper Inference, set its API key and select the built-in model:
 CHEAPERINFERENCE_API_KEY=your-api-key
 CHEAPERINFERENCE_API_BASE=https://api.cheaperinference.com/v1
 DEFAULT_MODEL=cheaper-inference:gpt-5.4-mini
+```
+
+To use UberLLM, set its API key and select the built-in model (any other id from `https://api.uberllm.dev/v1/models` works too, e.g. `uberllm:deepseek/deepseek-v4.1-flash`):
+
+```bash
+UBERLLM_API_KEY=your-api-key
+UBERLLM_API_BASE=https://api.uberllm.dev/v1
+DEFAULT_MODEL=uberllm:openai/gpt-5.4-mini
 ```
 
 ### Usage (CLI)

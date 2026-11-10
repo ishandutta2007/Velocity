@@ -33,3 +33,19 @@ describe('Cheaper Inference configuration', () => {
     });
   });
 });
+
+describe('UberLLM configuration', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('loads the UberLLM API key and endpoint from the environment', () => {
+    vi.stubEnv('UBERLLM_API_KEY', 'uberllm-test-key');
+    vi.stubEnv('UBERLLM_API_BASE', 'https://uberllm.example/v1');
+
+    expect(loadConfig()).toMatchObject({
+      uberllmApiKey: 'uberllm-test-key',
+      uberllmBaseUrl: 'https://uberllm.example/v1',
+    });
+  });
+});

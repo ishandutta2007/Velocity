@@ -17,6 +17,7 @@ import { OpenAIProvider } from './providers/openai.js';
 import { AnthropicProvider } from './providers/anthropic.js';
 import { AtlasCloudProvider } from './providers/atlas-cloud.js';
 import { CheaperInferenceProvider } from './providers/cheaper-inference.js';
+import { UberLLMProvider } from './providers/uberllm.js';
 import { OllamaProvider } from './providers/ollama.js';
 import { recordCall } from './cost-recorder.js';
 
@@ -72,12 +73,15 @@ export class ModelGateway {
     if (config.cheaperInferenceApiKey) {
       this.registerProvider(new CheaperInferenceProvider(config.cheaperInferenceApiKey, config.cheaperInferenceBaseUrl));
     }
+    if (config.uberllmApiKey) {
+      this.registerProvider(new UberLLMProvider(config.uberllmApiKey, config.uberllmBaseUrl));
+    }
 
     // Ollama is always registered (may or may not be running)
     this.registerProvider(new OllamaProvider(config.ollamaBaseUrl));
 
     // Build fallback chain: prefer real providers, fall back to mock
-    this.fallbackChain = ['gemini', 'openai', 'atlas-cloud', 'cheaper-inference', 'anthropic', 'ollama', 'mock'];
+    this.fallbackChain = ['gemini', 'openai', 'atlas-cloud', 'cheaper-inference', 'uberllm', 'anthropic', 'ollama', 'mock'];
   }
 
   registerProvider(provider: ModelProvider): void {

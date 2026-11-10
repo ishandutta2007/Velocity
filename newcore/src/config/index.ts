@@ -23,6 +23,8 @@ export const ConfigSchema = z.object({
   atlasCloudBaseUrl: z.string().default('https://api.atlascloud.ai/v1'),
   cheaperInferenceApiKey: z.string().optional(),
   cheaperInferenceBaseUrl: z.string().default('https://api.cheaperinference.com/v1'),
+  uberllmApiKey: z.string().optional(),
+  uberllmBaseUrl: z.string().default('https://api.uberllm.dev/v1'),
   ollamaBaseUrl: z.string().default('http://localhost:11434'),
   defaultModel: z.string().default('mock'),
 
@@ -100,6 +102,8 @@ export function loadConfig(overrides?: Partial<Config>): Config {
     atlasCloudBaseUrl: envVars.ATLASCLOUD_API_BASE || undefined,
     cheaperInferenceApiKey: envVars.CHEAPERINFERENCE_API_KEY || undefined,
     cheaperInferenceBaseUrl: envVars.CHEAPERINFERENCE_API_BASE || undefined,
+    uberllmApiKey: envVars.UBERLLM_API_KEY || undefined,
+    uberllmBaseUrl: envVars.UBERLLM_API_BASE || undefined,
     ollamaBaseUrl: envVars.OLLAMA_BASE_URL || undefined,
     defaultModel: envVars.DEFAULT_MODEL || undefined,
     workspaceRoot: envVars.WORKSPACE_ROOT || undefined,
